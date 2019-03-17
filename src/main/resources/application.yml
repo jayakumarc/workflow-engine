@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:h2:~/workflowengine;DB_CLOSE_ON_EXIT=false
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+camunda.bpm:
+  admin-user:
+    id: admin
+    password: admin
+    firstName: Admin
+  filter:
+    create: All tasks
+
+dashboardServiceHost: localhost
+dashboardServicePort: 8081

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_0sclfou" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="2.2.4">
+  <bpmn:process id="process-entity" name="Process an entity" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_EntityProcessInitiated" name="Entity process Initiated">
+      <bpmn:outgoing>SequenceFlow_0u8slot</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0u8slot" sourceRef="StartEvent_EntityProcessInitiated" targetRef="Task_SendForApproval" />
+    <bpmn:sendTask id="Task_SendForApproval" name="Send for approval" camunda:delegateExpression="#{approvalAdapter}">
+      <bpmn:incoming>SequenceFlow_0u8slot</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0no6urf</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0no6urf" sourceRef="Task_SendForApproval" targetRef="Task_ReceiveApprovalStatus" />
+    <bpmn:receiveTask id="Task_ReceiveApprovalStatus" name="Receive Approval Status" messageRef="Message_1w36nd6">
+      <bpmn:incoming>SequenceFlow_0no6urf</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_17nba21</bpmn:outgoing>
+    </bpmn:receiveTask>
+    <bpmn:endEvent id="EndEvent_EntityProcessed" name="Entity Processed">
+      <bpmn:incoming>SequenceFlow_05gn3q8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_05gn3q8" sourceRef="Task_SendNotification" targetRef="EndEvent_EntityProcessed" />
+    <bpmn:sendTask id="Task_SendNotification" name="Send Notification" camunda:delegateExpression="#{notificationAdapter}">
+      <bpmn:incoming>SequenceFlow_1gqncxx</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_05gn3q8</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:sequenceFlow id="SequenceFlow_17nba21" sourceRef="Task_ReceiveApprovalStatus" targetRef="Task_UpdateTaskStatus" />
+    <bpmn:sequenceFlow id="SequenceFlow_1gqncxx" sourceRef="Task_UpdateTaskStatus" targetRef="Task_SendNotification" />
+    <bpmn:sendTask id="Task_UpdateTaskStatus" name="Update Task Status" camunda:delegateExpression="#{taskStatusAdapter}">
+      <bpmn:incoming>SequenceFlow_17nba21</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1gqncxx</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:textAnnotation id="TextAnnotation_08lcpca">
+      <bpmn:text>REST</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_08x4d8c" sourceRef="StartEvent_EntityProcessInitiated" targetRef="TextAnnotation_08lcpca" />
+    <bpmn:textAnnotation id="TextAnnotation_1us7lr2">
+      <bpmn:text>REST</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0qih3fu" sourceRef="Task_SendForApproval" targetRef="TextAnnotation_1us7lr2" />
+    <bpmn:textAnnotation id="TextAnnotation_1i9pvni">
+      <bpmn:text>REST</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_00v8pq6" sourceRef="Task_ReceiveApprovalStatus" targetRef="TextAnnotation_1i9pvni" />
+    <bpmn:textAnnotation id="TextAnnotation_19o0zbv">
+      <bpmn:text>REST</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0eqnglv" sourceRef="Task_SendNotification" targetRef="TextAnnotation_19o0zbv" />
+    <bpmn:textAnnotation id="TextAnnotation_0sceiu8">
+      <bpmn:text>REST</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_00v0xwd" sourceRef="Task_UpdateTaskStatus" targetRef="TextAnnotation_0sceiu8" />
+  </bpmn:process>
+  <bpmn:message id="Message_1w36nd6" name="Message_ApprovalStatus" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="process-entity">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_EntityProcessInitiated">
+        <dc:Bounds x="173" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="157" y="145" width="70" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0u8slot_di" bpmnElement="SequenceFlow_0u8slot">
+        <di:waypoint x="209" y="120" />
+        <di:waypoint x="260" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="SendTask_0y9wt1m_di" bpmnElement="Task_SendForApproval">
+        <dc:Bounds x="260" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0no6urf_di" bpmnElement="SequenceFlow_0no6urf">
+        <di:waypoint x="360" y="120" />
+        <di:waypoint x="409" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ReceiveTask_1djmc9x_di" bpmnElement="Task_ReceiveApprovalStatus">
+        <dc:Bounds x="409" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_08lcpca_di" bpmnElement="TextAnnotation_08lcpca">
+        <dc:Bounds x="209" y="22" width="100" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_08x4d8c_di" bpmnElement="Association_08x4d8c">
+        <di:waypoint x="202" y="106" />
+        <di:waypoint x="247" y="52" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_1us7lr2_di" bpmnElement="TextAnnotation_1us7lr2">
+        <dc:Bounds x="359" y="0" width="100" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0qih3fu_di" bpmnElement="Association_0qih3fu">
+        <di:waypoint x="348" y="80" />
+        <di:waypoint x="395" y="30" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_1i9pvni_di" bpmnElement="TextAnnotation_1i9pvni">
+        <dc:Bounds x="509" y="0" width="100" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_00v8pq6_di" bpmnElement="Association_00v8pq6">
+        <di:waypoint x="497" y="80" />
+        <di:waypoint x="545" y="30" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_0qppfkx_di" bpmnElement="EndEvent_EntityProcessed">
+        <dc:Bounds x="860" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="838" y="145" width="83" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_05gn3q8_di" bpmnElement="SequenceFlow_05gn3q8">
+        <di:waypoint x="817" y="120" />
+        <di:waypoint x="860" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="SendTask_1sdh9uq_di" bpmnElement="Task_SendNotification">
+        <dc:Bounds x="717" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_19o0zbv_di" bpmnElement="TextAnnotation_19o0zbv">
+        <dc:Bounds x="785" y="10" width="100" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0eqnglv_di" bpmnElement="Association_0eqnglv">
+        <di:waypoint x="796" y="80" />
+        <di:waypoint x="824" y="40" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_17nba21_di" bpmnElement="SequenceFlow_17nba21">
+        <di:waypoint x="509" y="120" />
+        <di:waypoint x="559" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1gqncxx_di" bpmnElement="SequenceFlow_1gqncxx">
+        <di:waypoint x="659" y="120" />
+        <di:waypoint x="717" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="SendTask_1kj10h6_di" bpmnElement="Task_UpdateTaskStatus">
+        <dc:Bounds x="559" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0sceiu8_di" bpmnElement="TextAnnotation_0sceiu8">
+        <dc:Bounds x="659" y="0" width="100" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_00v0xwd_di" bpmnElement="Association_00v0xwd">
+        <di:waypoint x="647" y="80" />
+        <di:waypoint x="695" y="30" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
